@@ -1,6 +1,6 @@
-import builder from '../builder'
+import models from './'
 
-builder.prismaObject('User', {
+models.prismaObject('User', {
   fields: (t) => ({
     id: t.exposeID('id'),
     createdAt: t.expose('createdAt', {
@@ -14,7 +14,7 @@ builder.prismaObject('User', {
   }),
 })
 
-builder.queryField('user', (t) =>
+models.queryField('user', (t) =>
   t.prismaField({
     type: 'User',
     args: {
@@ -28,7 +28,7 @@ builder.queryField('user', (t) =>
   }),
 )
 
-builder.queryField('users', (t) =>
+models.queryField('users', (t) =>
   t.prismaField({
     type: ['User'],
     resolve: async (query, _root, _args, ctx) => {

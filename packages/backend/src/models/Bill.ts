@@ -1,6 +1,6 @@
-import builder from '../builder'
+import models from './'
 
-builder.prismaObject('Bill', {
+models.prismaObject('Bill', {
   fields: (t) => ({
     id: t.exposeID('id'),
     createdAt: t.expose('createdAt', {
@@ -16,24 +16,8 @@ builder.prismaObject('Bill', {
   }),
 })
 
-// Queries for Bill Model
-builder.prismaObject("Bill", {
-  fields: (t) => ({
-    id: t.exposeID("id"),
-    createdAt: t.expose("createdAt", {
-      type: "Date",
-    }),
-    updatedAt: t.expose("updatedAt", {
-      type: "Date",
-    }),
-    restaurantTable: t.relation("restaurantTable"),
-    user: t.relation("user"),
-    items: t.relation("items"),
-  }),
-});
-
 // Queries for Bill
-builder.queryField('bill', (t) => 
+models.queryField('bill', (t) =>
   t.prismaField({
     type: 'Bill',
     args: {
@@ -44,13 +28,13 @@ builder.queryField('bill', (t) =>
         ...query,
         where: { id: args.id },
       }),
-  })
-);
+  }),
+)
 
-builder.queryField('bills', (t) => 
+models.queryField('bills', (t) =>
   t.prismaField({
     type: ['Bill'],
     resolve: (query, _root, _args, context) =>
       context.prisma.bill.findMany({ ...query }),
-  })
-);
+  }),
+)

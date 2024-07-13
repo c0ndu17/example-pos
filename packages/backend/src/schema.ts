@@ -1,10 +1,15 @@
-import builder from './builder'
+import models from './models'
 
+/**
+ * Import models
+ *
+ */
 import './models/User'
 import './models/Auth'
 import './models/Bill'
 import './models/MenuItem'
 import './models/RestaurantTable'
 
-const schema = builder.toSchema({})
+const schema = models.toSchema({})
+
 export default schema

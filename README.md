@@ -1,7 +1,9 @@
 # Crypto.com POS - Point of Sale - System
 
 ## Introduction
-This is a simple Point of Sale system that manage tables. The system will also generate a receipt for the customer.
+This is a simple Point of Sale system that manage tables.
+
+The system will also generate a receipt for the customer.
 
 ## Installation
 1. Clone the repository
@@ -11,6 +13,7 @@ git clone https://github.com/c0ndu17/crypto-pos.git
 2. Run the following command to install the dependencies
 ```bash
 npm install
+npm generate:prisma
 ```
 
 ## Usage

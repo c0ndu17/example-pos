@@ -8,7 +8,7 @@
     "generate:prisma": "prisma generate",
     "generate:graphql": "graphql-codegen",
     "start": "node --experimental-specifier-resolution=node  --loader ts-node/esm ./dist/index.js",
-    "dev": "concurrently \"tsc --watch\" \"nodemon\"",
+    "dev": "concurrently \"tsc --watch\" \"npm start\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts,json}\"",

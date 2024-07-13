@@ -1,6 +1,6 @@
-import builder from '../builder'
+import models from './'
 
-builder.prismaObject('MenuItem', {
+models.prismaObject('MenuItem', {
   fields: (t) => ({
     id: t.exposeID('id'),
     name: t.exposeString('name'),
@@ -11,7 +11,7 @@ builder.prismaObject('MenuItem', {
 })
 
 // Queries for MenuItem
-builder.queryField('menuItem', (t) => 
+models.queryField('menuItem', (t) =>
   t.prismaField({
     type: 'MenuItem',
     args: {
@@ -22,13 +22,13 @@ builder.queryField('menuItem', (t) =>
         ...query,
         where: { id: args.id },
       }),
-  })
-);
+  }),
+)
 
-builder.queryField('menuItems', (t) => 
+models.queryField('menuItems', (t) =>
   t.prismaField({
     type: ['MenuItem'],
     resolve: (query, _root, _args, context) =>
       context.prisma.menuItem.findMany({ ...query }),
-  })
-);
+  }),
+)

@@ -1,14 +1,13 @@
-import SchemaBuilder from '@pothos/core'
 import { DateResolver } from 'graphql-scalars'
-import { prisma } from './db'
-import type { Context } from './context'
-
+import SchemaBuilder from '@pothos/core'
 import PrismaPlugin from '@pothos/plugin-prisma'
-
 import type PrismaTypes from '@pothos/plugin-prisma/generated'
 
+import { prisma } from '../db'
+import type { Context } from '../context'
+
 const builder = new SchemaBuilder<{
-  Context: Context,
+  Context: Context
   Scalars: {
     Date: { Input: Date; Output: Date }
   }

@@ -1,6 +1,6 @@
-import builder from '../builder'
+import models from '../models'
 
-builder.prismaObject('RestaurantTable', {
+models.prismaObject('RestaurantTable', {
   fields: (t) => ({
     id: t.exposeID('id'),
     tableNo: t.exposeInt('tableNo'),
@@ -8,26 +8,9 @@ builder.prismaObject('RestaurantTable', {
     bills: t.relation('bills'),
   }),
 })
-
-builder.prismaObject('RestaurantTable', {
-  fields: (t) => ({
-    id: t.exposeID('id'),
-    tableNo: t.exposeInt('tableNo'),
-    active: t.exposeBoolean('active'),
-    bills: t.relation('bills'),
-  }),
-})
-builder.prismaObject("RestaurantTable", {
-  fields: (t) => ({
-    id: t.exposeID("id"),
-    tableNo: t.exposeInt("tableNo"),
-    active: t.exposeBoolean("active"),
-    bills: t.relation("bills"),
-  }),
-});
 
 // Queries for RestaurantTable
-builder.queryField('restaurantTable', (t) => 
+models.queryField('restauratTable', (t) =>
   t.prismaField({
     type: 'RestaurantTable',
     args: {
@@ -38,15 +21,13 @@ builder.queryField('restaurantTable', (t) =>
         ...query,
         where: { id: args.id },
       }),
-  })
-);
+  }),
+)
 
-builder.queryField('restaurantTables', (t) => 
+models.queryField('restaurantTables', (t) =>
   t.prismaField({
     type: ['RestaurantTable'],
     resolve: (query, _root, _args, context) =>
       context.prisma.restaurantTable.findMany({ ...query }),
-  })
-);
-
-
+  }),
+)

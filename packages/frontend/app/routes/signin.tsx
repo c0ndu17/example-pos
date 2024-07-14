@@ -22,7 +22,7 @@ export default function LoginPage() {
     isDev() ? "user@example.com" : null
   );
   const [password, setPassword] = useState<String | null>(
-    isDev() ? "Test1234!" : null
+    isDev() ? "Test1234" : null
   );
 
   return (

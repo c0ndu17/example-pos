@@ -8,7 +8,7 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "generate:graphql": "graphql-codegen",
+    "codegen": "graphql-codegen",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/client-preset": "4.3.2",
     "@graphql-codegen/typed-document-node": "5.0.9",
     "@graphql-codegen/typescript": "4.0.9",
     "@graphql-codegen/typescript-operations": "4.2.3",

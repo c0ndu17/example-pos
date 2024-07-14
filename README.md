@@ -5,6 +5,9 @@ This is a simple Point of Sale system that manage tables.
 
 The system will also generate a receipt for the customer.
 
+
+// TODO: Detail .env setup
+
 ## Installation
 1. Clone the repository
 ```bash

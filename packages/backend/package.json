@@ -6,7 +6,6 @@
   "scripts": {
     "build": "npm run generate:prisma && tsc",
     "generate:prisma": "prisma generate",
-    "generate:graphql": "graphql-codegen",
     "start": "node --experimental-specifier-resolution=node  --loader ts-node/esm ./dist/index.js",
     "dev": "concurrently \"tsc --watch\" \"npm:build && nodemon\"",
     "db:seed": "prisma db seed",

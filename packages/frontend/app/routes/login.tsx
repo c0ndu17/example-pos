@@ -1,4 +1,5 @@
-import { Link, NavLink } from "@remix-run/react";
+import { Link } from "@remix-run/react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -14,15 +15,16 @@ export const metadata = {
   description: "Authentication forms built using the components.",
 };
 import { Label } from "~/components/ui/label";
-
-let defaultEmail;
-
-if (process.env.NODE_ENV === "development") {
-  defaultEmail = "";
-}
+import { isDev } from "~/lib/env";
 
 export default function LoginPage() {
-  const email = defaultEmail;
+  const [email, setEmail] = useState<String | null>(
+    isDev() ? "user@example.com" : null
+  );
+  const [password, setPassword] = useState<String | null>(
+    isDev() ? "Test1234" : null
+  );
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -35,17 +37,15 @@ export default function LoginPage() {
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
+            <Input id="email" type="email" placeholder="{email}" required />
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link className="ml-auto inline-block text-sm underline disabled">
+              <Link
+                className="ml-auto inline-block text-sm underline disabled"
+                to="."
+              >
                 Forgot your password? Sorry, friend.
               </Link>
             </div>
@@ -57,7 +57,7 @@ export default function LoginPage() {
         </div>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="#" className="underline">
+          <Link to="#" className="underline">
             Sign up
           </Link>
         </div>

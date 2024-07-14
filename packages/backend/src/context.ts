@@ -10,8 +10,11 @@ export const getContext: ContextFunction<
   [ExpressContextFunctionArgument],
   Context
 > = async (ctx) => {
+  // TODO:
+  const userId = ctx.req.headers['user-id']
   return {
     ...ctx,
+    userId,
     prisma,
   }
 }

@@ -9,10 +9,14 @@
     "generate:graphql": "graphql-codegen",
     "start": "node --experimental-specifier-resolution=node  --loader ts-node/esm ./dist/index.js",
     "dev": "concurrently \"tsc --watch\" \"npm start\"",
+    "db:seed": "prisma db seed",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts,json}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
   },
   "keywords": [
     "graphql",

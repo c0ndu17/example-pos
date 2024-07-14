@@ -14,7 +14,8 @@ datasource db {
 model User {
   id    Int     @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime 
+  updatedAt DateTime?
+  email     String  @unique
 
   auth    Auth   @relation(fields: [authId], references: [id])
   authId  Int    @unique
@@ -24,15 +25,14 @@ model User {
 
 model Auth {
   id        Int     @id @default(autoincrement())
-  email     String  @unique
   password  String
   
   user    User?
-
 }
 
 // Is this the trick? What do you call a table, if not a table. :-)
 // Prisma supports Table, somehow, but seems like a future problem waiting to happen.
+// I don't like RTable, but 'no ragrets'. Also a chance of having to do things r#r_table which seems like poor dx.
 model RestaurantTable {
   id       Int     @id @default(autoincrement())
   tableNo  Int
@@ -44,11 +44,11 @@ model RestaurantTable {
 model Bill {
   id        Int     @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime 
+  updatedAt DateTime?
+  closedAt  DateTime?
 
   restaurantTable    RestaurantTable    @relation(fields: [restaurantTableId], references: [id])
   restaurantTableId  Int
-
 
   items    MenuItem[]
 
@@ -60,7 +60,6 @@ model MenuItem {
   id        Int     @id @default(autoincrement())
   name      String
   price     Float
-  category  String
 
   bills Bill[]
 }

@@ -15,7 +15,7 @@ import { ApolloServer } from '@apollo/server'
 dotenv.config()
 
 import { getContext } from './context'
-import schema from './schema'
+import models, { getSchema } from './models'
 
 log.setLevel('info')
 
@@ -27,7 +27,7 @@ export interface ApolloContext {
   tracing?: boolean
 }
 
-export async function setupServer() {
+export async function main() {
   // Required logic for integrating with Express
   const app = express()
   app.use(morgan('tiny'))
@@ -37,6 +37,8 @@ export async function setupServer() {
     server: httpServer,
     path: '/graphql',
   })
+
+  const schema = models.toSchema()
 
   const serverCleanup = useServer({ schema }, wsServer)
 
@@ -81,3 +83,5 @@ export async function setupServer() {
 
   log.info(`🚀 Server ready at http://${host}:${port}/`)
 }
+
+await main()

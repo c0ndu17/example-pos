@@ -1,14 +1,15 @@
-FROM node:20.10
+# Use latest LTS Node.js image as the base image
+FROM node:20.10 as frontend
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
+RUN apt-get update && apt-get install -y iproute2
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install 
 
-# Bundle app source
 COPY . .
 
 EXPOSE 3000

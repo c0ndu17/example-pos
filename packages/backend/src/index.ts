@@ -3,46 +3,33 @@ import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import log from 'loglevel'
-import { WebSocketServer } from 'ws'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import { ApolloServerPluginInlineTrace } from '@apollo/server/plugin/inlineTrace'
 import { ApolloServerPluginCacheControlDisabled } from '@apollo/server/plugin/disabled'
 import { expressMiddleware } from '@apollo/server/express4'
-import { useServer } from 'graphql-ws/lib/use/ws'
 import morgan from 'morgan'
 import { ApolloServer } from '@apollo/server'
 
 dotenv.config()
 
-import { getContext } from './context'
+import { Context, getContext } from './context'
 import models from './models'
 
 log.setLevel('info')
 
-const host = process.env.HOST || 'localhost'
+// Defaults to backend, so you don't need env vars, and I don't need to generate them.
+const host = process.env.HOST || 'backend'
 const port = process.env.PORT || 4000
 
-export interface ApolloContext {
-  token?: string
-  tracing?: boolean
-}
-
 export async function main() {
-  // Required logic for integrating with Express
   const app = express()
   app.use(morgan('tiny'))
 
   const httpServer = http.createServer(app)
-  const wsServer = new WebSocketServer({
-    server: httpServer,
-    path: '/graphql',
-  })
 
   const schema = models.toSchema()
 
-  const serverCleanup = useServer({ schema }, wsServer)
-
-  const server = new ApolloServer<ApolloContext>({
+  const server = new ApolloServer<Context>({
     // For below see: https://www.apollographql.com/docs/apollo-server/data/errors
     status400ForVariableCoercionErrors: true,
     schema,
@@ -51,15 +38,7 @@ export async function main() {
       ApolloServerPluginInlineTrace(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ApolloServerPluginCacheControlDisabled(),
-      {
-        async serverWillStart() {
-          return {
-            async drainServer() {
-              await serverCleanup.dispose()
-            },
-          }
-        },
-      },
+      ApolloServerPluginDrainHttpServer({ httpServer }),
     ],
   })
 
@@ -68,8 +47,13 @@ export async function main() {
   app.use(
     '/',
     cors<cors.CorsRequest>({
-      origin: ['http://localhost:3000', 'http://localhost:4000'],
-      credentials: true,
+      origin: true,
+      // Commented out below because working out the docker compose network is a pain, it could be any of local subnets, potentially more.
+      // [
+      // `http://{host}:{port}`,
+      // 'http://localhost:3000',
+      // 'http://localhost:4000',
+      // ],
     }),
     express.json({ limit: '1mb' }),
     expressMiddleware(server, {
@@ -81,7 +65,9 @@ export async function main() {
     httpServer.listen({ host, port }, resolve),
   )
 
-  log.info(`🚀 Server ready at http://${host}:${port}/`)
+  log.info(
+    `🚀 Server ready at http://${host}:${port}/ | This is NOT the url you're looking for. This is the GraphQL server.`,
+  )
 }
 
 await main()

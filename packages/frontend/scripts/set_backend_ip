@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+# Get the host's IP address (assuming the default Docker bridge network)
+HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+
+# Set the GRAPHQL_URI environment variable
+export GRAPHQL_URI="http://${HOST_IP}:4000/graphql"
+
+# Execute the original command
+exec "$@"
+

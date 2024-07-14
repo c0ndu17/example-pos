@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+echo "cd $(dirname "$0")" 
+cd "$(dirname "$0")" 
+echo "\"./scripts/postinstall\" Running Post-Install Script"
+echo $(pwd)
+
+echo "executing backend postinstall"
+cd ../packages/backend || exit
+npm run generate:prisma
+
+echo "executing frontend postinstall"
+cd ../frontend || exit
+npm run generate:graphql || exit 0

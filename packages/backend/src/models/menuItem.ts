@@ -6,7 +6,7 @@ import { Models } from './'
 export default (models: Models) => {
   models.prismaObject('MenuItem', {
     fields: (t) => ({
-      id: t.exposeID('id'),
+      id: t.exposeInt('id'),
       name: t.exposeString('name'),
       price: t.exposeFloat('price'),
       bills: t.relation('bills'),

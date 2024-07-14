@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   backend:
+    container_name: backend_container
     build:
       context: ./packages/backend
     ports:
@@ -11,14 +12,30 @@ services:
     volumes:
       - ./packages/backend:/usr/src/app
       - /usr/src/app/node_modules
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'curl -s -X POST -H "Content-Type: application/json" --data-raw ''{"query": "query IntrospectionQuery { __schema { queryType { name } mutationType { name } subscriptionType { name } } }","operationName": "IntrospectionQuery"}'' http://backend:4000/graphql || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    entrypoint: ["/bin/sh", "-c", "npm run dev"]
 
   frontend:
+    container_name: frontend_container
     build:
       context: ./packages/frontend
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - GRAPHQL_URI
     volumes:
       - ./packages/frontend:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c", ". ./scripts/set_backend_ip && npm run dev"]

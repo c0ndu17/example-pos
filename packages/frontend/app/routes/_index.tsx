@@ -1,39 +1,54 @@
-import { Link } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
+
+import { graphql } from "~/graphql/gql";
+import { useGraphQL } from "~/hooks/useGraphQL";
+
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
+import Table from "~/components/Table";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Example | Point of Sale" },
+    {
+      name: "description",
+      content: "https://xkcd.com/1095/",
+    },
   ];
 };
 
+export const GetRestaurantTablesQuery = graphql(`
+  query GetRestaurantTables {
+    restaurantTables {
+      id
+    }
+  }
+`);
+
 export default function Index() {
+  const { data: { restaurantTables = [] } = {} } = useGraphQL(
+    GetRestaurantTablesQuery,
+  );
+
   return (
-    <div className="font-sans p-4">
-      <h1 className="text-3xl">Welcome to Remix</h1>
-      <ul className="list-disc mt-4 pl-6 space-y-2">
-        <li>
-          <Link
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            to="https://remix.run/start/quickstart"
-            rel="noreferrer"
-          >
-            5m Quick Start
-          </Link>
-        </li>
-        <li>
-          <Link
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            to="https://remix.run/start/tutorial"
-            rel="noreferrer"
-          >
-            30m Tutorial
-          </Link>
-        </li>
-      </ul>
+    <div className="relative flex min-h-screen min-w-screen">
+      <ScrollArea className="max-w-[600px] lg:max-w-full w-full">
+        <div className={"mb-4 flex items-center"}>
+          <div className="p-4 size-full mx-auto max-w-[768px]">
+            <h2 className="text-xl font-bold mb-4">Tables</h2>
+            <ul className="p-2 space-2 flex justify-around">
+              {restaurantTables?.map((table) => (
+                <li
+                  key={table.id}
+                  className="flex justify-between items-center"
+                >
+                  <Table tableId={table.id!} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <ScrollBar orientation="horizontal" className="invisible" />
+      </ScrollArea>
     </div>
   );
 }

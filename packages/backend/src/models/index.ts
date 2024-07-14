@@ -9,20 +9,18 @@ import type { Context } from '../context'
 /**
  * Models
  */
-import initUser from './user'
 import initBill from './bill'
 import initMenuItem from './menuItem'
+import initBillMenuItem from './billMenuItem'
 import initRestaurantTable from './restaurantTable'
 
-interface PothosSchema {
+const models = new SchemaBuilder<{
   Context: Context
   Scalars: {
     Date: { Input: Date; Output: Date }
   }
   PrismaTypes: PrismaTypes
-}
-
-const models = new SchemaBuilder<PothosSchema>({
+}>({
   plugins: [PrismaPlugin],
   prisma: {
     client: prisma,
@@ -31,10 +29,10 @@ const models = new SchemaBuilder<PothosSchema>({
 
 models.addScalarType('Date', DateResolver, {})
 
-// TODO: Refactor to simpler structure, reduce required boilerplate
-initUser(models)
+// TODO: Could be structured better, and reduce boilerplate. I'm not a fan of the recommended pattern, so I've been trying some things.
 initBill(models)
 initMenuItem(models)
+initBillMenuItem(models)
 initRestaurantTable(models)
 
 models.queryType({})

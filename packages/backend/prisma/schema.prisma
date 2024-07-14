@@ -11,72 +11,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime?
-  email     String  @unique
-
-  auth    Auth   @relation(fields: [authId], references: [id])
-  authId  Int    @unique
-
-  bills  Bill[]
-}
-
-model Auth {
-  id        Int     @id @default(autoincrement())
-  password  String
-  
-  user    User?
-}
-
 // Is this the trick? What do you call a table, if not a table. :-)
 // Prisma supports Table, somehow, but seems like a future problem waiting to happen.
 // I don't like RTable, but 'no ragrets'. Also a chance of having to do things r#r_table which seems like poor dx.
 model RestaurantTable {
-  id       Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   // To make this unique between restaurants, I'd add a restaurantId field, and make the combination unique.
-  tableNo  Int     @unique
-
-  bills   Bill[]
-}
-
-model Bill {
-  id        Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime?
-  closedAt  DateTime?
-
-  restaurantTable    RestaurantTable    @relation(fields: [restaurantTableId], references: [id])
-  restaurantTableId  Int
-
-  items    MenuItem[]
-
-  user    User    @relation(fields: [userId], references: [id])
-  userId  Int
-}
-
-model MenuItem {
-  id        Int     @id @default(autoincrement())
-  name      String
-  price     Float
+  tableNo Int @unique
 
   bills Bill[]
 }
 
-// Prisma handles Many to Many relationships by creating a join table.
-//
-// If it didn't I'd create a bridge table like below:
-//
-// model BillMenuItem {
-//   id        Int     @id @default(autoincrement())
-// 
-//   bill    Bill    @relation(fields: [billId], references: [id])
-//   billId  Int
-// 
-//   menuItem    MenuItem    @relation(fields: [menuItemId], references: [id])
-//   menuItemId  Int
-// }
-//
+model Bill {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  closedAt  DateTime?
+
+  restaurantTable   RestaurantTable @relation(fields: [restaurantTableId], references: [id])
+  restaurantTableId Int
+
+  items BillMenuItem[]
+}
+
+model MenuItem {
+  id    Int    @id @default(autoincrement())
+  name  String
+  price Float
+
+  bills BillMenuItem[]
+}
+
+model BillMenuItem {
+   id        Int     @id @default(autoincrement())
+ 
+   bill    Bill    @relation(fields: [billId], references: [id])
+   billId  Int
+ 
+   menuItem    MenuItem    @relation(fields: [menuItemId], references: [id])
+   menuItemId  Int
+ }
 

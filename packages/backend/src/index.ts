@@ -15,7 +15,7 @@ import { ApolloServer } from '@apollo/server'
 dotenv.config()
 
 import { getContext } from './context'
-import models, { getSchema } from './models'
+import models from './models'
 
 log.setLevel('info')
 

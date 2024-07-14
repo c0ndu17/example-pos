@@ -35,8 +35,9 @@ model Auth {
 // I don't like RTable, but 'no ragrets'. Also a chance of having to do things r#r_table which seems like poor dx.
 model RestaurantTable {
   id       Int     @id @default(autoincrement())
-  tableNo  Int
-  active   Boolean @default(false)
+
+  // To make this unique between restaurants, I'd add a restaurantId field, and make the combination unique.
+  tableNo  Int     @unique
 
   bills   Bill[]
 }

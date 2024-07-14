@@ -8,7 +8,7 @@
     "generate:prisma": "prisma generate",
     "generate:graphql": "graphql-codegen",
     "start": "node --experimental-specifier-resolution=node  --loader ts-node/esm ./dist/index.js",
-    "dev": "concurrently \"tsc --watch\" \"npm start\"",
+    "dev": "concurrently \"tsc --watch\" \"npm:build && nodemon\"",
     "db:seed": "prisma db seed",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -29,10 +29,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@apollo/server": "^4.10.4",
-    "@graphql-codegen/typescript": "^4.0.9",
-    "@graphql-codegen/typescript-resolvers": "^4.2.1",
     "@graphql-tools/schema": "^10.0.4",
-    "@noble/hashes": "^1.4.0",
+    "@node-rs/argon2": "1.8.3",
     "@pothos/core": "^4.0.2",
     "@pothos/plugin-prisma": "^4.0.3",
     "@prisma/client": "^5.16.2",
@@ -45,7 +43,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
-    "@graphql-codegen/cli": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/eslint__js": "^8.42.3",
     "@types/morgan": "^1.9.9",

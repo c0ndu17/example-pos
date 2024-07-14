@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { Models } from '.'
+import argon2 from '@node-rs/argon2'
 
 /**
  * User
@@ -14,6 +15,7 @@ export default (models: Models) => {
       updatedAt: t.expose('updatedAt', {
         type: 'Date',
       }),
+      email: t.exposeString('email'),
       authId: t.exposeID('authId'),
       bills: t.relation('bills'),
     }),
@@ -50,13 +52,14 @@ export default (models: Models) => {
         password: t.arg.string({ required: true }),
       },
       resolve: async (query, _root, args, ctx) => {
+        let password = await argon2.hash(args.password)
         return ctx.prisma.user.create({
           ...query,
           data: {
             email: args.email,
             auth: {
               create: {
-                password: args.password,
+                password,
               },
             },
           },
@@ -72,7 +75,9 @@ export default (models: Models) => {
         email: t.arg.string({ required: true }),
         password: t.arg.string({ required: true }),
       },
-      resolve: async (query, _root, args, ctx) => {
+      resolve: async (_query, _root, args, ctx) => {
+        // Went this way round, because it makes it marginally more secure.
+        // As opposed to including the auth in the user object.
         let { user, ...auth } = await ctx.prisma.auth.findFirstOrThrow({
           where: {
             user: {
@@ -83,18 +88,19 @@ export default (models: Models) => {
             user: true,
           },
         })
-        if (auth.password !== args.password) {
-          throw new GraphQLError('Invalid Username or Password', {
-            extensions: {
-              code: GraphQLErrorCode.BAD_USER_INPUT,
-              http: {
-                statusCode: 400,
-              },
-            },
-          })
+
+        if (await argon2.verify(auth.password, args.password)) {
+          return user
         }
 
-        return user
+        throw new GraphQLError('Invalid Username or Password', {
+          extensions: {
+            code: GraphQLErrorCode.BAD_USER_INPUT,
+            http: {
+              statusCode: 400,
+            },
+          },
+        })
       },
     }),
   )

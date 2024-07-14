@@ -1,4 +1,4 @@
-# Crypto.com POS - Point of Sale - System
+# Point of Sale Example
 
 ## Introduction
 This is a simple Point of Sale system that manage tables.
@@ -26,9 +26,14 @@ npm start
 
 3. You can now start using the system
 
-## Features
-1. Add table
-2. Remove table
+### Seed
+To seed the database with some data, run the following command. 
+
+This shouldn't be required to start, this project is using SQLite.
+```bash
+npm run db:seed
+```
+
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
